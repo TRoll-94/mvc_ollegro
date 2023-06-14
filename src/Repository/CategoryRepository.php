@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +39,44 @@ class CategoryRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getProductPropertiesCount(int $id): int
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+
+        $qb ->from('App\Entity\Category', 'category')
+            ->leftJoin('category.productProperties', 'productProperty')
+            ->groupBy('category.id')
+            ->where('category.id = :id')
+            ->setParameter('id', $id)
+            ->select('COUNT(productProperty.id)');
+
+        try {
+            return $qb->getQuery()->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+            return -1;
+        } catch (NoResultException $e) {
+            return -1;
+        }
+    }
+
+    public function getFirstCategory(): ?Category
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+
+        $qb ->from('App\Entity\Category', 'category')
+            ->select('category');
+
+
+        try {
+            return $qb->setMaxResults(1)->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return Null;
+        }
+
     }
 
 //    /**

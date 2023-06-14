@@ -73,12 +73,20 @@ class CategoryController extends AbstractController
 
     #[IsGranted('ROLE_MERCHANT')]
     #[Route('/{id}', name: 'app_category_delete', methods: ['POST'])]
-    public function delete(Request $request, Category $category, CategoryRepository $categoryRepository): Response
+    public function delete(
+        Request $request, Category $category, CategoryRepository $categoryRepository,
+    ): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
-            $categoryRepository->remove($category, true);
+        if (!$this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
+            return $this->redirectToRoute('app_category_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        $total = $categoryRepository->getProductPropertiesCount($category->getId());
+        if ($total!=0) {
+            $this->addFlash('verify_category_delete', "Cannot delete group because it has products properties: {$total}");
+            return $this->redirectToRoute('app_category_delete', ['id'=>$category->getId()], Response::HTTP_SEE_OTHER);
+        }
+        $categoryRepository->remove($category, true);
         return $this->redirectToRoute('app_category_index', [], Response::HTTP_SEE_OTHER);
     }
 }

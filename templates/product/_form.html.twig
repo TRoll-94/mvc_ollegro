@@ -1,0 +1,24 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+
+<script>
+    let $category = $('#product_category');
+    $category.change(function() {
+        let $form = $(this).closest('form');
+        let data = {'_type': 'check'};
+        data[$category.attr('name')] = $category.val();
+        $.ajax({
+            url : $form.attr('action'),
+            type: $form.attr('method'),
+            data : data,
+            complete: function(html) {
+                $('#product_properties').replaceWith(
+                    $(html.responseText).find('#product_properties')
+                );
+            }
+        });
+    });
+</script>
+

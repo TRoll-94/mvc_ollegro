@@ -11,6 +11,7 @@ import './styles/global.scss';
 
 import './bootstrap.js';
 
-const $ = require('jquery');
 require('bootstrap');
+const $ = require('jquery');
+global.$ = global.jQuery = $;
 
