@@ -1,0 +1,11 @@
+{% extends 'base_form.html.twig' %}
+
+{% block title %}New ProductProperty{% endblock %}
+
+{% block form_name %}Create new product property{% endblock %}
+{% block form %}
+
+    {{ include('product_property/_form.html.twig') }}
+
+    <a href="{{ path('app_product_property_index') }}">back to list</a>
+{% endblock %}

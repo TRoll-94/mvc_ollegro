@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ProductProperty index{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1>ProductProperty index</h1>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Value</th>
+                <th>Category</th>
+                <th>actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for product_property in product_properties %}
+                <tr>
+                    <td>{{ product_property.id }}</td>
+                    <td>{{ product_property.name }}</td>
+                    <td>{{ product_property.code }}</td>
+                    <td>{{ product_property.value }}</td>
+                    <td>{{ product_property.category }}</td>
+                    <td>
+                        <a href="{{ path('app_product_property_show', {'id': product_property.id}) }}">show</a>
+                        <a href="{{ path('app_product_property_edit', {'id': product_property.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_product_property_new') }}">Create new</a>
+    </div>
+{% endblock %}
