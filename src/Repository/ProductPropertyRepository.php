@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\ProductProperty;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @extends ServiceEntityRepository<ProductProperty>
@@ -37,6 +39,30 @@ class ProductPropertyRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getUniqueProductProperties(Category $id, array $properties=null): Collection
+    {
+        print_r($properties);
+        if ($properties==null) {
+           return $id->getProductProperties();
+        }
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+
+        $qb->select('pp')
+            ->from(ProductProperty::class, 'pp')
+            ->where('pp.category = :id')
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->in('pp.id', ':properties'),
+                $qb->expr()->notIn('pp.code', ':codes')
+            ))
+            ->setParameter('id', $id)
+            ->setParameter('properties', $properties)
+            ->setParameter('codes', array_unique(array_column($properties, 'code')));
+
+        $query = $qb->getQuery();
+        return $query->getResult();
     }
 
 //    /**

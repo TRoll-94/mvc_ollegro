@@ -4,11 +4,16 @@
 {{ form_end(form) }}
 
 <script>
-    let $category = $('#product_category');
-    $category.change(function() {
-        let $form = $(this).closest('form');
-        let data = {'_type': 'check'};
-        data[$category.attr('name')] = $category.val();
+    let $category = $('#product_category')
+    let $properties = $('#product_properties')
+    $category.change(updateProps);
+
+    function updateProps() {
+        let $form = $(this).closest('form')
+        let data = {
+            '_type': 'check',
+            [$category.attr('name')]: $category.val()
+        }
         $.ajax({
             url : $form.attr('action'),
             type: $form.attr('method'),
@@ -19,6 +24,7 @@
                 );
             }
         });
-    });
+    }
+
 </script>
 

@@ -6,10 +6,7 @@ use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\ProductProperty;
 use App\Entity\User;
-use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use phpDocumentor\Reflection\Types\Null_;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -110,8 +107,8 @@ class ProductType extends AbstractType
         $builder->get('category')->addEventListener(
             FormEvents::POST_SUBMIT,
             function (FormEvent $event) use ($formModifier) {
-                $category= $event->getForm()->getData();
-                $formModifier($event->getForm()->getParent(), $category);
+                $data = $event->getForm()->getData();
+                $formModifier($event->getForm()->getParent(), $data);
             }
         );
 
