@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -36,7 +37,9 @@ class Product
     #[ORM\Column]
     private ?int $total = null;
 
-    #[ORM\Column(options: ["default"=>0])]
+    #[ORM\Column(options: ["default" => 0])]
+    #[Assert\Expression(expression: "this.getTotalReserved() <= this.getTotal()",
+                        message: "The reserved total must be less than or equal to the total.")]
     private ?int $total_reserved = null;
 
     #[ORM\Column(length: 32)]
