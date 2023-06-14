@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
+use App\Service\ProductValidationService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function Symfony\Component\Translation\t;
 
 #[Route('/product')]
 class ProductController extends AbstractController
@@ -22,13 +25,21 @@ class ProductController extends AbstractController
     }
 
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ProductRepository $productRepository): Response
+    public function new(Request $request, ProductRepository $productRepository,
+        ProductValidationService $productValidationService,
+        LoggerInterface $logger,
+    ): Response
     {
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $data = $request->get('product');
+        $is_valid = $productValidationService->validate($product, $data, function ($key, $msg) {
+            $this->addFlash($key, $msg);
+        });
+
+        if ($is_valid && $form->isSubmitted() && $form->isValid()) {
             $productRepository->save($product, true);
 
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
@@ -49,7 +60,8 @@ class ProductController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_product_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function edit(Request $request, Product $product, ProductRepository $productRepository): Response
+    public function edit(Request $request, Product $product, ProductRepository $productRepository,
+        ProductValidationService $productValidationService): Response
     {
         $isCheck = $request->request->get('_type', false);
         if ($isCheck) {
@@ -58,7 +70,12 @@ class ProductController extends AbstractController
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $data = $request->get('product');
+        $is_valid = $productValidationService->validate($product, $data, function ($key, $msg) {
+            $this->addFlash($key, $msg);
+        });
+
+        if ($is_valid && $form->isSubmitted() && $form->isValid()) {
             $productRepository->save($product, true);
 
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);

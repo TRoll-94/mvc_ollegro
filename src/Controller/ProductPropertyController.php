@@ -60,7 +60,7 @@ class ProductPropertyController extends AbstractController
             return $this->redirectToRoute('app_product_property_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('product_property/edit.html.twig', [
+        return $this->render('product_property/edit.html.twig', [
             'product_property' => $productProperty,
             'form' => $form,
         ]);

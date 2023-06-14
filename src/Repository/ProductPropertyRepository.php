@@ -43,7 +43,6 @@ class ProductPropertyRepository extends ServiceEntityRepository
 
     public function getUniqueProductProperties(Category $id, array $properties=null): Collection
     {
-        print_r($properties);
         if ($properties==null) {
            return $id->getProductProperties();
         }

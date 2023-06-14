@@ -1,5 +1,8 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
+    {% for flash_error in app.flashes('verify_product') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
     <button class="btn btn-success">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
 

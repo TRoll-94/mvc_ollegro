@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -37,6 +38,22 @@ class ProductRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function withSameSkuAndProperties($sku, $properties): array
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+
+        $qb->select('p')
+            ->from('App\Entity\Product', 'p')
+            ->leftJoin('p.properties', 'pp')
+            ->where($qb->expr()->eq('p.sku', ':sku'))
+            ->andWhere($qb->expr()->in('pp.id', ':properties'))
+            ->setParameter('sku', $sku)
+            ->setParameter('properties', $properties);
+
+        return $qb->getQuery()->getResult();
     }
 
 //    /**
