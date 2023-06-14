@@ -55,9 +55,26 @@ class CategoryRepository extends ServiceEntityRepository
 
         try {
             return $qb->getQuery()->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
+        } catch (NonUniqueResultException|NoResultException $e) {
             return -1;
-        } catch (NoResultException $e) {
+        }
+    }
+
+    public function getProductCount(int $id): int
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+
+        $qb ->from('App\Entity\Category', 'category')
+            ->leftJoin('category.products', 'products')
+            ->groupBy('category.id')
+            ->where('category.id = :id')
+            ->setParameter('id', $id)
+            ->select('COUNT(products.id)');
+
+        try {
+            return $qb->getQuery()->getSingleScalarResult();
+        } catch (NonUniqueResultException|NoResultException $e) {
             return -1;
         }
     }
