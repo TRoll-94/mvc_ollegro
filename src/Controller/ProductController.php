@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use function Symfony\Component\Translation\t;
 
 #[Route('/product')]
@@ -24,6 +25,7 @@ class ProductController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_MERCHANT')]
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ProductRepository $productRepository,
         ProductValidationService $productValidationService,
@@ -59,6 +61,7 @@ class ProductController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_MERCHANT')]
     #[Route('/{id}/edit', name: 'app_product_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, ProductRepository $productRepository,
         ProductValidationService $productValidationService): Response
@@ -87,6 +90,7 @@ class ProductController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_MERCHANT')]
     #[Route('/{id}', name: 'app_product_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, Product $product, ProductRepository $productRepository): Response
     {
