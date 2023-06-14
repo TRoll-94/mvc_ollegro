@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Category;
 use App\Entity\ProductProperty;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Collections\Collection;
 
@@ -62,6 +64,25 @@ class ProductPropertyRepository extends ServiceEntityRepository
 
         $query = $qb->getQuery();
         return $query->getResult();
+    }
+
+    public function getProductCount(int $id): int
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+
+        $qb ->from('App\Entity\ProductProperty', 'pp')
+            ->leftJoin('pp.products', 'products')
+            ->groupBy('pp.id')
+            ->where('pp.id = :id')
+            ->setParameter('id', $id)
+            ->select('COUNT(products.id)');
+
+        try {
+            return $qb->getQuery()->getSingleScalarResult();
+        } catch (NonUniqueResultException|NoResultException $e) {
+            return -1;
+        }
     }
 
 //    /**

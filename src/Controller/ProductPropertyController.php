@@ -73,10 +73,17 @@ class ProductPropertyController extends AbstractController
     #[Route('/{id}', name: 'app_product_property_delete', methods: ['POST'])]
     public function delete(Request $request, ProductProperty $productProperty, ProductPropertyRepository $productPropertyRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$productProperty->getId(), $request->request->get('_token'))) {
-            $productPropertyRepository->remove($productProperty, true);
+        if (!$this->isCsrfTokenValid('delete'.$productProperty->getId(), $request->request->get('_token'))) {
+            return $this->redirectToRoute('app_product_property_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        $total_products = $productPropertyRepository->getProductCount($productProperty->getId());
+        if ($total_products!=0) {
+            $this->addFlash('verify_product_property_delete', "Cannot delete product property because it has products: {$total_products}");
+            return $this->redirectToRoute('app_product_property_index', ['id'=>$productProperty->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        $productPropertyRepository->remove($productProperty, true);
         return $this->redirectToRoute('app_product_property_index', [], Response::HTTP_SEE_OTHER);
     }
 }
