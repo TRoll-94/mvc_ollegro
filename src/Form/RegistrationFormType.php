@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -32,6 +33,13 @@ class RegistrationFormType extends AbstractType
                         'minMessage' => 'Your name should be at least {{ limit }} characters',
                     ]),
                 ],
+            ])
+            ->add('user_type', ChoiceType::class, [
+                'mapped' => false,
+                'choices' => [
+                    'Customer' => 'ROLE_CUSTOMER',
+                    'Merchant' => 'ROLE_MERCHANT',
+                ]
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
