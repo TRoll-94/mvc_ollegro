@@ -65,7 +65,9 @@ class ProductRepository extends ServiceEntityRepository
         $qb ->select('p')
             ->from('App\Entity\Product', 'p')
             ->where('p.owner = :user')
-            ->setParameter('user', $user);
+            ->setParameter('user', $user)
+            ->orderBy('p.sku', 'ASC')
+            ->addOrderBy('p.id', 'ASC');
 
         return $qb->getQuery()->getResult();
     }

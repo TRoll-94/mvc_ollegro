@@ -3,5 +3,10 @@
 {% block header %}
     {{ include('utils/logo.html.twig') }}
 
-    {{ include('utils/logout.html.twig') }}
+    <div>
+        {% if is_granted('ROLE_MERCHANT') %}
+            <a class="me-1" href="{{ path('app_merchant_index') }}">admin</a>
+        {% endif %}
+        {{ include('utils/logout.html.twig') }}
+    </div>
 {% endblock %}

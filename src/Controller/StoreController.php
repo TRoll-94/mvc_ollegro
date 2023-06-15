@@ -25,10 +25,12 @@ class StoreController extends AbstractController
                         LoggerInterface $logger
     ): Response
     {
-        $category_selected = $request->get('category_select')['category'] ?? '';
-        $logger->error("=====================");
-        $logger->error(print_r($category_selected, true));
-        $products = $productRepository->findBy(['category' => $category_selected]);
+        $category_selected = $request->get('category_select')['category'] ?? null;
+        if ($category_selected!=null) {
+            $products = $productRepository->findBy(['category' => $category_selected]);
+        } else {
+            $products = $productRepository->findAll();
+        }
 
         $category_select = $categoryRepository->findAll();
         $category_select_form = $this->createForm(CategorySelectType::class, $category_select, options: ['data_class'=>null]);

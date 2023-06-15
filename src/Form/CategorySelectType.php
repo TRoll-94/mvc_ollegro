@@ -17,8 +17,8 @@ class CategorySelectType extends AbstractType
             ->add('category', EntityType::class, [
                 'choice_value' => 'id',
                 'choice_label' => 'name',
-                'data' => '',
                 'class' => Category::class,
+                'placeholder' => 'Select a category',
                 'label' => 'Category',
                 'multiple' => false,
                 'required' => true,
