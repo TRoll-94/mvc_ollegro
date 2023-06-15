@@ -110,7 +110,7 @@ class ProductController extends AbstractController
         $response = new StreamedResponse(function () use ($user, $productRepository) {
             $handle = fopen('php://output', 'w');
 
-            $headers = ['ID', 'Name', 'Price', 'Description'];
+            $headers = ['ID', 'SKU', 'Name', 'Price', 'Description', 'Total', 'Total Reserved'];
             fputcsv($handle, $headers);
 
             $products = $productRepository->findByUser($user);
@@ -118,9 +118,12 @@ class ProductController extends AbstractController
             foreach ($products as $product) {
                 $data = [
                     $product->getId(),
+                    $product->getSku(),
                     $product->getName(),
                     $product->getPrice(),
                     $product->getDescription(),
+                    $product->getTotal(),
+                    $product->getTotalReserved(),
                 ];
 
                 fputcsv($handle, $data);
