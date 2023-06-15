@@ -48,6 +48,9 @@ class Product
     #[ORM\ManyToMany(targetEntity: ProductProperty::class, inversedBy: 'products')]
     private Collection $properties;
 
+    #[ORM\ManyToOne(inversedBy: 'product')]
+    private ?Cart $cart = null;
+
     public function __construct()
     {
         $this->properties = new ArrayCollection();
@@ -174,6 +177,18 @@ class Product
     public function removeProperty(ProductProperty $property): static
     {
         $this->properties->removeElement($property);
+
+        return $this;
+    }
+
+    public function getCart(): ?Cart
+    {
+        return $this->cart;
+    }
+
+    public function setCart(?Cart $cart): static
+    {
+        $this->cart = $cart;
 
         return $this;
     }

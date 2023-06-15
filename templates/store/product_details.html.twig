@@ -28,10 +28,15 @@
                     </button>
                 </div>
                 <div class="">
+                    {% for flash in app.flashes('success_buy') %}
+                        <div class="alert alert-primary" role="alert">{{ flash }}</div>
+                    {% endfor %}
                     {% if is_anon %}
                         <p class="alert alert-warning">if you want to buy products, please log in</p>
+                    {% elseif product.total<=0 %}
+                        <p class="alert alert-warning">Product out of stock</p>
                     {% else %}
-                        <button class="btn btn-outline-success w-100">buy</button>
+                        <a href="{{ path('app_store_product_buy', {'id': product.id}) }}" class="btn btn-outline-success w-100">buy</a>
                     {% endif %}
                 </div>
                 <div class="w-100 mt-5">

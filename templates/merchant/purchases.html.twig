@@ -1,0 +1,28 @@
+{% extends 'merchant/base.html.twig' %}
+
+{% block container %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>User</th>
+            <th>Product</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for flash in app.flashes('success') %}
+            <div class="alert alert-primary" role="alert">{{ flash }}</div>
+        {% endfor %}
+        {% for purchase in purchases %}
+            <tr>
+                <td>{{ purchase.owner.name }}</td>
+                <td>{{ purchase.product.name }}</td>
+                <td>
+                    <a href="{{ path('app_merchant_purchase_realise', {'id': purchase.id}) }}" class="btn btn-success">Send</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

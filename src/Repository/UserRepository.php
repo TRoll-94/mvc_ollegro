@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Cart;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -97,6 +98,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
 
         return $result;
+    }
+
+    public function findCartsByUser(User $user)
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+
+        $qb->select('c')
+            ->from(Cart::class, 'c')
+            ->join('c.product', 'product')
+            ->where('product.owner = :user')
+            ->setParameter('user', $user);
+
+        return $qb->getQuery()->getResult();
     }
 
 //    /**

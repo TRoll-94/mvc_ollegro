@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Cart;
 use App\Entity\Product;
 use App\Form\CategorySelectType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -63,6 +65,26 @@ class StoreController extends AbstractController
             'product' => $product,
             'other_products' => $other_products,
         ]);
+    }
+
+    #[IsGranted('IS_AUTHENTICATED')]
+    #[Route('product/buy/{id}', name: "app_store_product_buy")]
+    public function product_buy(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        $cart = new Cart();
+        $cart -> setProduct($product);
+        $cart -> setOwner($user);
+        $entityManager -> persist($cart);
+        $entityManager -> flush();
+
+        $this->addFlash('success_buy', 'The purchase was successful, please wait for the shipment');
+        $product->setTotal($product->getTotal()-1);
+        $product->setTotalReserved($product->getTotalReserved()+1);
+        $entityManager->persist($product);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_store_product_index', ['id'=>$product->getId()]);
     }
 
 }
