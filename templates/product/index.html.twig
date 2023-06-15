@@ -12,10 +12,11 @@
                 <th>Id</th>
                 <th>Name</th>
                 <th>Description</th>
+                <th>Category</th>
+                <th>Sku</th>
                 <th>Price</th>
                 <th>Total</th>
-                <th>Total_reserved</th>
-                <th>Sku</th>
+                <th>Total reserved</th>
                 <th>actions</th>
             </tr>
             </thead>
@@ -25,10 +26,11 @@
                     <td>{{ product.id }}</td>
                     <td>{{ product.name }}</td>
                     <td>{{ product.description }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td>{{ product.sku }}</td>
                     <td>{{ product.price }}</td>
                     <td>{{ product.total }}</td>
                     <td>{{ product.totalReserved }}</td>
-                    <td>{{ product.sku }}</td>
                     <td>
                         <a href="{{ path('app_product_show', {'id': product.id}) }}">show</a>
                         <a href="{{ path('app_product_edit', {'id': product.id}) }}">edit</a>
@@ -43,5 +45,6 @@
         </table>
 
         <a href="{{ path('app_product_new') }}">Create new</a>
+        <a href="{{ path('app_product_to_csv') }}">Products to csv</a>
     </div>
 {% endblock %}
