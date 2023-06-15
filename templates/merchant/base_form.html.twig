@@ -1,0 +1,10 @@
+{% extends 'merchant/base.html.twig' %}
+
+{% block container %}
+    <div class="row justify-content-center">
+        <div class="card p-4 col-6 shadow-lg">
+            <h1 class="mb-3 text-center">{% block form_name %}{% endblock %}</h1>
+            {% block form %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

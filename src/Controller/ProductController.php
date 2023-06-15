@@ -25,6 +25,7 @@ class ProductController extends AbstractController
         $user = $this->getUser();
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findByUser($user),
+            'merchant' => $this->getUser()
         ]);
     }
 
@@ -52,6 +53,7 @@ class ProductController extends AbstractController
         return $this->render('product/new.html.twig', [
             'product' => $product,
             'form' => $form,
+            'merchant' => $this->getUser()
         ]);
     }
 
@@ -60,6 +62,7 @@ class ProductController extends AbstractController
     {
         return $this->render('product/show.html.twig', [
             'product' => $product,
+            'merchant' => $this->getUser()
         ]);
     }
 
@@ -92,6 +95,7 @@ class ProductController extends AbstractController
         return $this->render('product/edit.html.twig', [
             'product' => $product,
             'form' => $form,
+            'merchant' => $this->getUser()
         ]);
     }
 

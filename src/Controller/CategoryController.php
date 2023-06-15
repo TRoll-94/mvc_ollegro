@@ -20,6 +20,7 @@ class CategoryController extends AbstractController
     {
         return $this->render('category/index.html.twig', [
             'categories' => $categoryRepository->findAll(),
+            'merchant' => $this->getUser()
         ]);
     }
 
@@ -39,6 +40,7 @@ class CategoryController extends AbstractController
         return $this->render('category/new.html.twig', [
             'category' => $category,
             'form' => $form,
+            'merchant' => $this->getUser()
         ]);
     }
 
@@ -47,6 +49,7 @@ class CategoryController extends AbstractController
     {
         return $this->render('category/show.html.twig', [
             'category' => $category,
+            'merchant' => $this->getUser()
         ]);
     }
     #[Route('/{id}/edit', name: 'app_category_edit', methods: ['GET', 'POST'])]
@@ -64,6 +67,7 @@ class CategoryController extends AbstractController
         return $this->render('category/edit.html.twig', [
             'category' => $category,
             'form' => $form,
+            'merchant' => $this->getUser()
         ]);
     }
     #[Route('/{id}', name: 'app_category_delete', methods: ['POST'])]

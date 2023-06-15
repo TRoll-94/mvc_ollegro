@@ -20,6 +20,7 @@ class ProductPropertyController extends AbstractController
     {
         return $this->render('product_property/index.html.twig', [
             'product_properties' => $productPropertyRepository->findAll(),
+            'merchant' => $this->getUser()
         ]);
     }
 
@@ -36,9 +37,10 @@ class ProductPropertyController extends AbstractController
             return $this->redirectToRoute('app_product_property_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('product_property/new.html.twig', [
+        return $this->render('product_property/new.html.twig', [
             'product_property' => $productProperty,
             'form' => $form,
+            'merchant' => $this->getUser()
         ]);
     }
 
@@ -47,6 +49,7 @@ class ProductPropertyController extends AbstractController
     {
         return $this->render('product_property/show.html.twig', [
             'product_property' => $productProperty,
+            'merchant' => $this->getUser()
         ]);
     }
 
@@ -65,6 +68,7 @@ class ProductPropertyController extends AbstractController
         return $this->render('product_property/edit.html.twig', [
             'product_property' => $productProperty,
             'form' => $form,
+            'merchant' => $this->getUser()
         ]);
     }
 
