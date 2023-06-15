@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+{{ include("store/header/header.html.twig") }}
 <div class="container">
     <div class="div flex-column">
-        {{ include("store/header/header.html.twig") }}
 
         {% block container %}{% endblock %}
     </div>
