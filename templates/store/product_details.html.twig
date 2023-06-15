@@ -1,0 +1,74 @@
+{% extends 'store/base.html.twig' %}
+
+{% block container %}
+    <div>
+        <div class="row">
+            <div class="col-8">
+                <h2>{{ product.name }}</h2>
+                <p class="fs-6 font-monospace text-secondary mb-5">SKU: {{ product.sku }}</p>
+                <div id="productDetailsCarousel" class="carousel slide" style="min-height: 400px">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="https://picsum.photos/2048/1024?random=1" class="d-block w-100">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://picsum.photos/2048/1024?random=2" class="d-block w-100">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://picsum.photos/2048/1024?random=3" class="d-block w-100">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productDetailsCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productDetailsCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div class="">
+                    {% if is_anon %}
+                        <p class="alert alert-warning">if you want to buy products, please log in</p>
+                    {% else %}
+                        <button class="btn btn-outline-success w-100">buy</button>
+                    {% endif %}
+                </div>
+                <div class="w-100 mt-5">
+                    <p>Properties:</p>
+                    <table  class="table">
+                        <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for property in product.properties %}
+                            <tr>
+                                <td>{{ property.code }}</td>
+                                <td>{{ property.value }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mt-5">{{ product.description }}</p>
+            </div>
+            <div class="col-4">
+                {% if other_products|length > 0 %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Other products</h5>
+                            <ul class="list-group">
+                                {% for other_product in other_products %}
+                                    <a href="{{ path('app_store_product_index', {'id': other_product.id}) }}" class="list-group-item list-group-item-action">{{ other_product.name }}</a>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -76,6 +76,22 @@ class ProductRepository extends ServiceEntityRepository
         return $user === $product->getOwner();
     }
 
+    public function productsWithTheSameSku(Product $product): array
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+
+        $qb->select('p')
+            ->from('App\Entity\Product', 'p')
+            ->leftJoin('p.properties', 'pp')
+            ->where($qb->expr()->eq('p.sku', ':sku'))
+            ->andWhere($qb->expr()->neq('p.id', ':id'))
+            ->setParameter('sku', $product->getSku())
+            ->setParameter('id', $product->getId());
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Product[] Returns an array of Product objects
 //     */

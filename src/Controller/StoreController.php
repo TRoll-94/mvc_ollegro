@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
 use App\Form\CategorySelectType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
@@ -45,4 +46,23 @@ class StoreController extends AbstractController
             'products' => $products,
         ]);
     }
+
+    #[Route('/product/{id}', name: 'app_store_product_index')]
+    public function product_page(Request $request, Product $product, UserRepository $userRepository,
+                                 CategoryRepository $categoryRepository,
+                                    ProductRepository $productRepository,
+                            LoggerInterface $logger
+    ): Response
+    {
+        $user = $this->getUser();
+        $is_anon = !$user instanceof UserInterface;
+        $other_products = $productRepository->productsWithTheSameSku($product);
+
+        return $this->render('store/product_details.html.twig', [
+            'is_anon' => $is_anon,
+            'product' => $product,
+            'other_products' => $other_products,
+        ]);
+    }
+
 }
