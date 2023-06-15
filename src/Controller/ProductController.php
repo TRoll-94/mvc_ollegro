@@ -15,7 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use function Symfony\Component\Translation\t;
 
-#[Route('/product')]
+#[IsGranted('ROLE_MERCHANT')]
+#[Route('/merchant/product')]
 class ProductController extends AbstractController
 {
     #[Route('/', name: 'app_product_index', methods: ['GET'])]
@@ -26,7 +27,6 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_MERCHANT')]
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ProductRepository $productRepository,
         ProductValidationService $productValidationService,
@@ -62,7 +62,6 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_MERCHANT')]
     #[Route('/{id}/edit', name: 'app_product_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, ProductRepository $productRepository,
         ProductValidationService $productValidationService): Response
@@ -91,7 +90,6 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_MERCHANT')]
     #[Route('/{id}', name: 'app_product_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, Product $product, ProductRepository $productRepository): Response
     {
@@ -102,7 +100,6 @@ class ProductController extends AbstractController
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[IsGranted('ROLE_MERCHANT')]
     #[Route('/csv', name: 'app_product_to_csv', methods: ['GET'])]
     public function exportProductsToCsv(Request $request, ProductRepository $productRepository): Response
     {
