@@ -4,12 +4,17 @@
 
 {% block body %}
 <div class="container mt-5">
-  <div class="row">
-    <h1>
-      <a class="link-dark link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{{ path('app_merchant_index') }}">
-        Merchant admin page
-      </a>
-    </h1>
+  <div class="d-flex align-items-center justify-content-between">
+    <div>
+      <h1>
+        <a class="link-dark link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{{ path('app_merchant_index') }}">
+          Merchant admin page
+        </a>
+      </h1>
+    </div>
+    <div>
+      <a href="{{ path('app_logout') }}">Logout</a>
+    </div>
   </div>
   <p>Hello {{ merchant.name }}</p>
   <hr>
