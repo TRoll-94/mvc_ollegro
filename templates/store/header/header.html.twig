@@ -1,0 +1,7 @@
+<div class="d-flex w-100 justify-content-between align-items-center">
+    {% if is_anon %}
+        {{ include('store/header/anon_header.html.twig') }}
+    {% else %}
+        {{ include('store/header/authenticated_header.html.twig') }}
+    {% endif %}
+</div>
