@@ -10,6 +10,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use function Symfony\Component\Translation\t;
@@ -100,4 +101,38 @@ class ProductController extends AbstractController
 
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[IsGranted('ROLE_MERCHANT')]
+    #[Route('/csv', name: 'app_product_to_csv', methods: ['GET'])]
+    public function exportProductsToCsv(Request $request, ProductRepository $productRepository): Response
+    {
+        $user = $this->getUser();
+        $response = new StreamedResponse(function () use ($user, $productRepository) {
+            $handle = fopen('php://output', 'w');
+
+            $headers = ['ID', 'Name', 'Price', 'Description'];
+            fputcsv($handle, $headers);
+
+            $products = $productRepository->findByUser($user);
+
+            foreach ($products as $product) {
+                $data = [
+                    $product->getId(),
+                    $product->getName(),
+                    $product->getPrice(),
+                    $product->getDescription(),
+                ];
+
+                fputcsv($handle, $data);
+            }
+
+            fclose($handle);
+        });
+
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="products.csv"');
+
+        return $response;
+    }
+
 }

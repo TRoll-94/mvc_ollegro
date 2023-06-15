@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Collections\Collection;
@@ -52,6 +53,19 @@ class ProductRepository extends ServiceEntityRepository
             ->andWhere($qb->expr()->in('pp.id', ':properties'))
             ->setParameter('sku', $sku)
             ->setParameter('properties', $properties);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findByUser(User $user): array
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+
+        $qb ->select('p')
+            ->from('App\Entity\Product', 'p')
+            ->where('p.owner = :user')
+            ->setParameter('user', $user);
 
         return $qb->getQuery()->getResult();
     }
