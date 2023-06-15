@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -54,6 +56,47 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
 
         $this->save($user, true);
+    }
+
+    public function totalProducts(User $user): int
+    {
+        return count($user->getProducts());
+    }
+
+    public function totalProductsInWarehouse(User $user): int
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        $qb->select('SUM(p.total)')
+            ->join('u.products', 'p')
+            ->where('u = :user')
+            ->setParameter('user', $user);
+
+        try {
+            $result = $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException|NonUniqueResultException $e) {
+            return 0;
+        }
+
+        return $result;
+    }
+
+    public function totalReservedProductsInWarehouse(User $user): int
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        $qb->select('SUM(p.total_reserved)')
+            ->join('u.products', 'p')
+            ->where('u = :user')
+            ->setParameter('user', $user);
+
+        try {
+            $result = $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException|NonUniqueResultException $e) {
+            return 0;
+        }
+
+        return $result;
     }
 
 //    /**

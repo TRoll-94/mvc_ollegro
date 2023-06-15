@@ -1,12 +1,25 @@
 {% extends 'merchant/base.html.twig' %}
 
 {% block container %}
-    <div class="row">
+    <div class="row align-items-center">
         <div class="col-2">
             <div class="row">
                 <a href="{{ path('app_product_index') }}" class="btn btn-primary my-1">Products</a>
                 <a href="{{ path('app_category_index') }}" class="btn btn-primary my-1">Categories</a>
                 <a href="{{ path('app_product_property_index') }}" class="btn btn-primary my-1">Product properties</a>
+            </div>
+        </div>
+        <div class="col-10">
+            <div class="d-flex justify-content-evenly align-content-between flex-wrap text-center">
+                <div class="card col-3 p-3 mx-1">
+                    <span>Totals products: {{ merchant_repo.totalProducts(merchant) }}</span>
+                </div>
+                <div class="card col-3 p-3 mx-1">
+                    <span>Totals products in warehouse: {{ merchant_repo.totalProductsInWarehouse(merchant) }}</span>
+                </div>
+                <div class="card col-3 p-3 mx-1">
+                    <span>Totals reserved products in warehouse: {{ merchant_repo.totalReservedProductsInWarehouse(merchant) }}</span>
+                </div>
             </div>
         </div>
     </div>
