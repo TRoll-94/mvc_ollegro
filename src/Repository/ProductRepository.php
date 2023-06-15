@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Product;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Collections\Collection;
 
@@ -90,6 +92,22 @@ class ProductRepository extends ServiceEntityRepository
             ->setParameter('id', $product->getId());
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function countPurchases(Product $product)
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb -> select('Count(c.id)')
+            -> from('App\Entity\Cart', 'c')
+            ->where('c.product = :product')
+            ->setParameter('product', $product);
+
+        try {
+            return $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException|NonUniqueResultException $e) {
+            return 1;
+        }
     }
 
 //    /**

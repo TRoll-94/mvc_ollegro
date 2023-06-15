@@ -1,4 +1,7 @@
 <form method="post" action="{{ path('app_product_delete', {'id': product.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+    {% for flash in app.flashes('product_delete') %}
+        <div class="alert alert-danger" role="alert">{{ flash }}</div>
+    {% endfor %}
     <button class="btn btn-danger">Delete</button>
 </form>

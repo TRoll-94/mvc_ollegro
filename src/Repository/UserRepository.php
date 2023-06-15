@@ -79,7 +79,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             return 0;
         }
 
-        return $result;
+        if ($result==null) {
+            return 0;
+        } else {
+            return $result;
+        }
     }
 
     public function totalReservedProductsInWarehouse(User $user): int
@@ -97,7 +101,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             return 0;
         }
 
-        return $result;
+        if ($result==null) {
+            return 0;
+        } else {
+            return $result;
+        }
     }
 
     public function findCartsByUser(User $user)

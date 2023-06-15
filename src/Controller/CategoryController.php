@@ -79,7 +79,7 @@ class CategoryController extends AbstractController
             return $this->redirectToRoute('app_category_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $total_products = $categoryRepository->getProductPropertiesCount($category->getId());
+        $total_products = $categoryRepository->getProductCount($category->getId());
         if ($total_products!=0) {
             $this->addFlash('verify_category_delete', "Cannot delete group because it has products: {$total_products}");
             return $this->redirectToRoute('app_category_delete', ['id'=>$category->getId()], Response::HTTP_SEE_OTHER);

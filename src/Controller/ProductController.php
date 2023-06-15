@@ -100,11 +100,18 @@ class ProductController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_product_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function delete(Request $request, Product $product, ProductRepository $productRepository): Response
+    public function delete(Request $request, Product $product, ProductRepository $productRepository,
+        LoggerInterface $logger): Response
     {
         $user = $this->getUser();
         if (!$productRepository->isProductOwner($product, $user)) {
             throw $this->createAccessDeniedException('Access denied');
+        }
+        $logger->error("-----------------------------------------------");
+        $logger->error("RS: {$productRepository->countPurchases($product)}");
+        if ($productRepository->countPurchases($product) != 0) {
+            $this->addFlash('product_delete', 'Submit all purchases first');
+            return $this->redirectToRoute('app_product_show', ['id'=>$product->getId()], Response::HTTP_SEE_OTHER);
         }
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
             $productRepository->remove($product, true);
