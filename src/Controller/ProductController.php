@@ -67,6 +67,10 @@ class ProductController extends AbstractController
     public function edit(Request $request, Product $product, ProductRepository $productRepository,
         ProductValidationService $productValidationService): Response
     {
+        $user = $this->getUser();
+        if (!$productRepository->isProductOwner($product, $user)) {
+            throw $this->createAccessDeniedException('Access denied');
+        }
         $isCheck = $request->request->get('_type', false);
         if ($isCheck) {
             $product = new Product();
@@ -94,6 +98,10 @@ class ProductController extends AbstractController
     #[Route('/{id}', name: 'app_product_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, Product $product, ProductRepository $productRepository): Response
     {
+        $user = $this->getUser();
+        if (!$productRepository->isProductOwner($product, $user)) {
+            throw $this->createAccessDeniedException('Access denied');
+        }
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
             $productRepository->remove($product, true);
         }

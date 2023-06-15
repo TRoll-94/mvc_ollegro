@@ -70,6 +70,10 @@ class ProductRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    private function isProductOwner(Product $product, User $user): bool {
+        return $user === $product->getOwner();
+    }
+
 //    /**
 //     * @return Product[] Returns an array of Product objects
 //     */
