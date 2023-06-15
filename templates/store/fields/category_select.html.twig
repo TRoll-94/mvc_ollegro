@@ -1,0 +1,15 @@
+{{ form_start(category_select_form) }}
+    {{ form_widget(category_select_form) }}
+{{ form_end(category_select_form) }}
+
+<script>
+    let $category = $('#category_select_category')
+    $category.change(updateProps);
+
+    function updateProps() {
+        let $form = $(this).closest('form');
+        $form.submit();
+    }
+
+</script>
+

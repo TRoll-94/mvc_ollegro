@@ -1,5 +1,7 @@
 {% extends 'store/base.html.twig' %}
 
 {% block container %}
-    <h1>Abra</h1>
+    {{ include('store/fields/category_select.html.twig') }}
+
+    {{ include('store/product/products.html.twig') }}
 {% endblock %}

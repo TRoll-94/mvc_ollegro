@@ -1,0 +1,5 @@
+<div class="d-flex flex-wrap justify-content-start">
+    {% for product in products %}
+        <div class="m-1">{{ include('store/product/product.html.twig', [product]) }}</div>
+    {% endfor %}
+</div>
